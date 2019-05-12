@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os/exec"
 	"regexp"
+	"sort"
 	"strconv"
 	"sync"
 )
@@ -48,6 +49,8 @@ func Analyze() {
 	}
 
 	deduplicate()
+	sortContributors()
+
 	render()
 }
 
@@ -204,4 +207,11 @@ func deduplicate() {
 			}
 		}
 	}
+}
+
+// sortContributors sort contributors by the number of commits.
+func sortContributors() {
+	sort.Slice(contributors, func(i, j int) bool {
+		return contributors[i].commits > contributors[j].commits
+	})
 }
