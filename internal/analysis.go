@@ -21,22 +21,31 @@ func Analyze() {
 	raw := getRawStatistics()
 	extractContributors(raw)
 
-	var wg sync.WaitGroup
-
 	if len(contributors) > 0 {
-		for _, author := range contributors {
+		tasks := make(chan *Contributor)
+		var wg sync.WaitGroup
+
+		workersLimit := getMaxParallelism()
+		for worker := 0; worker < workersLimit; worker++ {
 			wg.Add(1)
 
-			go func(author *Contributor) {
+			go func() {
 				defer wg.Done()
 
-				loadContributorStats(author)
-				loadContributorActivity(author)
-			}(author)
+				for author := range tasks {
+					loadContributorStats(author)
+					loadContributorActivity(author)
+				}
+			}()
 		}
-	}
 
-	wg.Wait()
+		for _, author := range contributors {
+			tasks <- author
+		}
+
+		close(tasks)
+		wg.Wait()
+	}
 
 	deduplicate()
 	render()

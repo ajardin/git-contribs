@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"runtime"
 
 	"github.com/olekukonko/tablewriter"
 )
@@ -12,6 +13,18 @@ import (
 func check(e error) {
 	if e != nil {
 		panic(e)
+	}
+}
+
+// getMaxParallelism retrieves the maximum number of concurrent workers.
+func getMaxParallelism() int {
+	maxProcs := runtime.GOMAXPROCS(0)
+	numCPU := runtime.NumCPU()
+
+	if maxProcs < numCPU {
+		return maxProcs
+	} else {
+		return numCPU
 	}
 }
 
