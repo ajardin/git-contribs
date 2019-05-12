@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/ajardin/contributions/cmd"
+	"github.com/ajardin/git-contribs/cmd"
 )
 
 func main() {

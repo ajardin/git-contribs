@@ -4,7 +4,7 @@ import (
 	"errors"
 	"flag"
 
-	contributions "github.com/ajardin/contributions/internal"
+	contributions "github.com/ajardin/git-contribs/internal"
 )
 
 func init() {
